@@ -2,9 +2,164 @@
 <html>
     <head>
         <title>{% page_attribute "page_title" %}</title>
+        {% addtoblock "css" %}
+        <style>
+           body {
+    background-color: black;
+    font-family: Arial, sans-serif;
+}
+
+section {
+    text-align: center;
+    padding: 20px;
+}
+.container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.tile {
+    background-color: white;
+    width: 200px;
+    margin: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+}
+
+.tile-image {
+    width: 100%;
+    height: auto;
+}
+
+.tile-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.tile-content {
+    text-align: justify;
+    margin: 10px;
+}
+
+.tile-footer {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin-bottom: 10px;
+}
+
+.tile-price {
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.add-cart-btn {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+.carousel {
+  position: relative;
+  height: 200px;
+  width: 800px;
+  background-color: #ddd;
+}
+
+.quote {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 1s;
+  font-size: 20px;
+  text-align: center;
+  color: white;
+  background-color: #ddd;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.quote.active {
+  opacity: 1;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ddd;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+}
+
+.arrow.left {
+  left: 10px;
+}
+
+.arrow.right {
+  right: 10px;
+}
+
+        </style>
+        {% endaddtoblock %}
         {% render_block "css" %}
     </head>
     <body>
+        {% addtoblock "js" %}
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+              const quotes = Array.from(document.querySelectorAll('.quote'));
+              const leftArrow = document.querySelector('.arrow.left');
+              const rightArrow = document.querySelector('.arrow.right');
+              let current = 0;
+        
+              function updateQuotes() {
+                quotes.forEach((quote, index) => {
+                  quote.style.opacity = index === current ? '1' : '0';
+                });
+              }
+        
+              leftArrow.addEventListener('click', () => {
+                current = (current - 1 + quotes.length) % quotes.length;
+                updateQuotes();
+              });
+        
+              rightArrow.addEventListener('click', () => {
+                current = (current + 1) % quotes.length;
+                updateQuotes();
+              });
+            });
+          </script>
+    {% endaddtoblock %}
+    
         {% cms_toolbar %}
         {% placeholder "Content" %}
         {% render_block "js" %}
